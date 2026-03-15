@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Mushaf | Laith Issa</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0d0d0d;
+      color: #e8d5a3;
+      min-height: 100vh;
+    }
+    header {
+      background: linear-gradient(135deg, #1a0a00, #2d1500);
+      padding: 30px 20px;
+      text-align: center;
+      border-bottom: 2px solid #c9a84c;
+    }
+    header h1 {
+      font-size: 2rem;
+      color: #c9a84c;
+      letter-spacing: 2px;
+    }
+    header p { color: #a08040; font-size: 1rem; margin-top: 6px; }
+    .back-link {
+      display: inline-block;
+      margin: 15px 20px;
+      color: #c9a84c;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .back-link:hover { color: #fff; }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    /* Surah List */
+    #surah-list-section h2 {
+      text-align: center;
+      color: #c9a84c;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #c9a84c44;
+      padding-bottom: 10px;
+    }
+    .search-box {
+      display: block;
+      width: 100%;
+      padding: 10px 15px;
+      margin-bottom: 20px;
+      background: #1a1000;
+      border: 1px solid #c9a84c;
+      border-radius: 8px;
+      color: #e8d5a3;
+      font-size: 1rem;
+    }
+    .search-box::placeholder { color: #7a6030; }
+    .surah-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+    }
+    .surah-card {
+      background: #1a0f00;
+      border: 1px solid #c9a84c44;
+      border-radius: 10px;
+      padding: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .surah-card:hover {
+      background: #2d1f00;
+      border-color: #c9a84c;
+      transform: translateY(-2px);
+    }
+    .surah-number {
+      background: #c9a84c;
+      color: #0d0d0d;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+    .surah-info { text-align: right; flex: 1; margin-right: 10px; }
+    .surah-name-ar { font-family: 'Amiri', serif; font-size: 1.1rem; color: #e8d5a3; }
+    .surah-name-en { font-size: 0.75rem; color: #a08040; margin-top: 2px; }
+    .surah-verses { font-size: 0.7rem; color: #7a6030; }
+    /* Reader */
+    #reader-section { display: none; }
+    .reader-header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: #1a0f00;
+      border-radius: 12px;
+      border: 1px solid #c9a84c44;
+    }
+    .reader-header h2 { font-family: 'Amiri', serif; font-size: 2rem; color: #c9a84c; }
+    .reader-header p { color: #a08040; margin-top: 5px; }
+    .back-btn {
+      background: none;
+      border: 1px solid #c9a84c;
+      color: #c9a84c;
+      padding: 8px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+    .back-btn:hover { background: #c9a84c; color: #0d0d0d; }
+    .bismillah {
+      text-align: center;
+      font-family: 'Amiri', serif;
+      font-size: 2.2rem;
+      color: #c9a84c;
+      margin: 20px 0 30px;
+      direction: rtl;
+    }
+    .ayah-block {
+      margin-bottom: 25px;
+      padding: 20px;
+      background: #1a0f00;
+      border-radius: 10px;
+      border-left: 3px solid #c9a84c44;
+    }
+    .ayah-arabic {
+      font-family: 'Amiri', serif;
+      font-size: 1.8rem;
+      color: #f0e0b0;
+      direction: rtl;
+      text-align: right;
+      line-height: 2.2;
+      margin-bottom: 12px;
+    }
+    .ayah-number-badge {
+      display: inline-block;
+      background: #c9a84c;
+      color: #0d0d0d;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      text-align: center;
+      line-height: 28px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      margin-left: 8px;
+    }
+    .ayah-translation {
+      font-size: 0.95rem;
+      color: #a08040;
+      line-height: 1.7;
+      border-top: 1px solid #c9a84c22;
+      padding-top: 10px;
+      font-style: italic;
+    }
+    .loading {
+      text-align: center;
+      padding: 60px;
+      color: #c9a84c;
+      font-size: 1.2rem;
+    }
+    .spinner {
+      border: 3px solid #2d1500;
+      border-top: 3px solid #c9a84c;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #5a4020;
+      margin-top: 40px;
+      border-top: 1px solid #c9a84c22;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>&#x1F4D6; My Mushaf</h1>
+    <p>Read the Holy Quran — Arabic with English Translation</p>
+  </header>
+  <a href="index.html" class="back-link">&#8592; Back to Home</a>
+
+  <div class="container">
+
+    <!-- Surah List -->
+    <div id="surah-list-section">
+      <h2>&#x2728; Choose a Surah</h2>
+      <input class="search-box" type="text" id="search" placeholder="Search Surah by name..." oninput="filterSurahs()" />
+      <div class="surah-grid" id="surah-grid">  
+        <div class="loading"><div class="spinner"></div>Loading Surahs...</div>
+      </div>
+    </div>
+
+    <!-- Reader -->
+    <div id="reader-section">
+      <button class="back-btn" onclick="showList()">&#8592; All Surahs</button>
+      <div class="reader-header">
+        <h2 id="reader-surah-name"></h2>
+        <p id="reader-surah-info"></p>
+      </div>
+      <div class="bismillah" id="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+      <div id="ayahs-container"></div>
+    </div>
+
+  </div>
+
+  <footer>&#9733; My Mushaf &mdash; Built with love by Laith Issa &#9733;</footer>
+
+  <script>
+    let allSurahs = [];
+
+    async function loadSurahs() {
+      try {
+        const res = await fetch('https://api.alquran.cloud/v1/surah');
+        const data = await res.json();
+        allSurahs = data.data;
+        renderSurahs(allSurahs);
+      } catch (e) {
+        document.getElementById('surah-grid').innerHTML = '<p style="color:#c00;text-align:center">Failed to load. Please check your internet connection.</p>';
+      }
+    }
+
+    function renderSurahs(list) {
+      const grid = document.getElementById('surah-grid');
+      grid.innerHTML = list.map(s => `
+        <div class="surah-card" onclick="loadSurah(${s.number})">
+          <div class="surah-info">
+            <div class="surah-name-ar">${s.name}</div>
+            <div class="surah-name-en">${s.englishName}</div>
+            <div class="surah-verses">${s.numberOfAyahs} Ayahs &bull; ${s.revelationType}</div>
+          </div>
+          <div class="surah-number">${s.number}</div>
+        </div>`).join('');
+    }
+
+    function filterSurahs() {
+      const q = document.getElementById('search').value.toLowerCase();
+      const filtered = allSurahs.filter(s =>
+        s.englishName.toLowerCase().includes(q) ||
+        s.englishNameTranslation.toLowerCase().includes(q) ||
+        s.number.toString().includes(q)
+      );
+      renderSurahs(filtered);
+    }
+
+    async function loadSurah(number) {
+      document.getElementById('surah-list-section').style.display = 'none';
+      const reader = document.getElementById('reader-section');
+      reader.style.display = 'block';
+      document.getElementById('ayahs-container').innerHTML = '<div class="loading"><div class="spinner"></div>Loading Surah...</div>';
+
+      const surah = allSurahs.find(s => s.number === number);
+      document.getElementById('reader-surah-name').textContent = surah.name + '  ' + surah.englishName;
+      document.getElementById('reader-surah-info').textContent = surah.englishNameTranslation + '  |  ' + surah.numberOfAyahs + ' Ayahs  |  ' + surah.revelationType;
+      document.getElementById('bismillah').style.display = (number === 9) ? 'none' : 'block';
+
+      try {
+        const [arRes, enRes] = await Promise.all([
+          fetch(`https://api.alquran.cloud/v1/surah/${number}`),
+          fetch(`https://api.alquran.cloud/v1/surah/${number}/en.sahih`)
+        ]);
+        const arData = await arRes.json();
+        const enData = await enRes.json();
+        const ayahs = arData.data.ayahs;
+        const trans = enData.data.ayahs;
+
+        document.getElementById('ayahs-container').innerHTML = ayahs.map((a, i) => `
+          <div class="ayah-block">
+            <div class="ayah-arabic">${a.text}<span class="ayah-number-badge">${a.numberInSurah}</span></div>
+            <div class="ayah-translation">${trans[i].text}</div>
+          </div>`).join('');
+      } catch (e) {
+        document.getElementById('ayahs-container').innerHTML = '<p style="color:#c00;text-align:center">Failed to load ayahs.</p>';
+      }
+      window.scrollTo(0, 0);
+    }
+
+    function showList() {
+      document.getElementById('reader-section').style.display = 'none';
+      document.getElementById('surah-list-section').style.display = 'block';
+      window.scrollTo(0, 0);
+    }
+
+    loadSurahs();
+  </script>
+
+</body>
+</html>
